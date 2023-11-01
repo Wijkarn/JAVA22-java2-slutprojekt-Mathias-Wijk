@@ -2,11 +2,13 @@ package view;
 
 import javax.swing.*;
 
+import controller.Controller;
 import model.Buffer;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class GUI {
 	private JFrame frame;
@@ -15,13 +17,20 @@ public class GUI {
 	private JButton removeButton;
 	private JPanel progressBarPanel;
 	private JProgressBar progressBar;
+	private JTextArea logTextArea; // Add JTextArea for logging
+	private JScrollPane logScrollPane; // Add a scroll pane for the text area
 	private Buffer buffer = null;
+	private Controller controller;
+
+	public GUI(Controller controller) {
+		this.controller = controller;
+	}
 
 	public void createAndShowGUI(int maxAmount, Buffer buffer) {
 		this.buffer = buffer;
 		frame = new JFrame("AvJavaSlutprojekt");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(500, 300);
+		frame.setSize(800, 400); // Increased the height to accommodate the log area
 
 		controlPanel = new JPanel();
 		addButton = new JButton("Add Producer");
@@ -32,17 +41,26 @@ public class GUI {
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 
+		// Create JTextArea for logging
+		logTextArea = new JTextArea(10, 1); // Set rows and columns
+		logTextArea.setEditable(false); // Make it read-only
+		logScrollPane = new JScrollPane(logTextArea);
+
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateProductIndicator(maxAmount);
+				controller.addProducer();
+				updateProductIndicator();
+				//logMessage("Producer added.");
 			}
 		});
 
 		removeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateProductIndicator(maxAmount);
+				controller.removeProducer();
+				updateProductIndicator();
+				//logMessage("Producer removed.");
 			}
 		});
 
@@ -53,18 +71,15 @@ public class GUI {
 
 		frame.add(controlPanel, BorderLayout.NORTH);
 		frame.add(progressBarPanel, BorderLayout.CENTER);
+		frame.add(logScrollPane, BorderLayout.SOUTH);
 
-		updateProductIndicator(maxAmount);
+		updateProductIndicator();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
-	public void updateProductIndicator(double maxAmount) {
-		// numProducts = (numWorkers / maxAmount) * 100;
-		// progressBar.setValue((int) numProducts);
+	public void updateProductIndicator() {
 		progressBar.setValue(buffer.getSize());
-
-		// Change the progress bar color
 		progressBar.setForeground(getColorForPercentage(buffer.getSize()));
 	}
 
@@ -76,5 +91,9 @@ public class GUI {
 		} else {
 			return Color.BLUE;
 		}
+	}
+
+	private void logMessage(String message) {
+		logTextArea.setText("[" + new Date() + "] " + message + "\n");
 	}
 }

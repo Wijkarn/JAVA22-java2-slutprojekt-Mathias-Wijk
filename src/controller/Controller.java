@@ -33,18 +33,18 @@ public class Controller {
 		System.out.println("Amount of producers: " + producerList.size());
 		System.out.println("Amount of consumers: " + consumerList.size());
 
-		gui = new GUI();
+		gui = new GUI(this);
 
 		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount, buffer));
-		
+
 		int delay = 1000;
-	    timer = new Timer(delay, (ActionListener) new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            gui.updateProductIndicator(maxAmount);
-	        }
-	    });
-	    timer.start();
+		timer = new Timer(delay, (ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gui.updateProductIndicator();
+			}
+		});
+		timer.start();
 	}
 
 	private int getRandom(int maxValue, int minValue) {
@@ -52,12 +52,19 @@ public class Controller {
 	}
 
 	public void addProducer() {
-		Thread producer = new Thread(new Producer(buffer, getRandom(10, 1)));
-		producer.start();
-		producerList.add(producer);
+		if (producerList.size() < maxAmount) {
+			Thread producer = new Thread(new Producer(buffer, getRandom(10, 1)));
+			producer.start();
+			producerList.add(producer);
+			System.out.println("Added producers! Total: " + producerList.size());
+		}
 	}
 
 	public void removeProducer() {
-
+		if (!producerList.isEmpty()) {
+			Thread producerThread = producerList.removeFirst();
+			producerThread.interrupt();
+		}
+		System.out.println("Removed producers! Total: " + producerList.size());
 	}
 }

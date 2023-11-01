@@ -25,7 +25,6 @@ public class Buffer {
 	}
 
 	public int getSize() {
-		System.out.println( buffer.size());
 		return buffer.size();
 	}
 }

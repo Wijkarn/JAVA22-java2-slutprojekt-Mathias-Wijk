@@ -14,6 +14,10 @@ public class Producer implements Runnable {
 		System.out.println("Producer speed: " + speed);
 	}
 
+	public void stopProducing() {
+		isRunning = false;
+	}
+
 	public void start() {
 		this.start();
 	}
@@ -24,11 +28,11 @@ public class Producer implements Runnable {
 			try {
 				Thread.sleep(speed * 1000);
 
-				buffer.add(new Item("" + (int) (Math.random() * 100)));
+				buffer.add(new Item("" + (int) (Math.random() * 10)));
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				isRunning = false;
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
-
 }
