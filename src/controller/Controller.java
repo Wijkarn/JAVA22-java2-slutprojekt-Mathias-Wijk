@@ -17,7 +17,6 @@ public class Controller {
 	private Buffer buffer;
 	private int maxAmount = 15;
 	private GUI gui;
-	private Timer timer;
 	Logger logger;
 
 	public void start() {
@@ -62,13 +61,22 @@ public class Controller {
 
 	private void timerUpdate() {
 		int delay = 1000;
-		timer = new Timer(delay, (ActionListener) new ActionListener() {
+		Timer timer = new Timer(delay, (ActionListener) new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gui.updateProgressBar();
 			}
 		});
 		timer.start();
+		
+		int delay2 = 10000;
+		Timer timer2 = new Timer(delay2, (ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gui.logMessage("Amount of products: " + buffer.getSize());
+			}
+		});
+		timer2.start();
 	}
 
 	public int getProducerListSize() {

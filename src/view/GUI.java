@@ -27,7 +27,10 @@ public class GUI {
 	public GUI(Controller controller) {
 		this.controller = controller;
 		logger = Logger.getInstance();
-		createLogTextArea();
+		
+		logTextArea = new JTextArea(10, 20);
+		logTextArea.setEditable(false);
+		logScrollPane = new JScrollPane(logTextArea);
 	}
 
 	public void createAndShowGUI(int maxAmount, Buffer buffer) {
@@ -44,20 +47,12 @@ public class GUI {
 		progressBarPanel.setLayout(new BorderLayout());
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-
-		// Create JTextArea for logging
-		if (logTextArea == null) {
-			createLogTextArea();
-		}
-
+		
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.addProducer();
 				updateProgressBar();
-
-				// logMessage("Added producer! Amount of producers: " +
-				// controller.getProducerListSize());
 			}
 		});
 
@@ -66,8 +61,6 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				controller.removeProducer();
 				updateProgressBar();
-				// logMessage("Removed producer! Amount of producers: " +
-				// controller.getProducerListSize());
 			}
 		});
 
@@ -110,11 +103,5 @@ public class GUI {
 		logTextArea.append("[" + new Date() + "] " + message + "\n");
 		logger.logText(message);
 		System.out.println(message);
-	}
-
-	private void createLogTextArea() {
-		logTextArea = new JTextArea(10, 20);
-		logTextArea.setEditable(false);
-		logScrollPane = new JScrollPane(logTextArea);
 	}
 }
