@@ -1,7 +1,7 @@
 package model;
 
 public class Item {
-	String id = "";
+	private String id = "";
 
 	public Item(String id) {
 		this.id = id;

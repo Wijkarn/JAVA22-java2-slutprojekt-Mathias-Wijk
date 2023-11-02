@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-import logger.Logger;
 import model.Buffer;
 import view.GUI;
 
@@ -15,16 +14,13 @@ public class Controller {
 	private LinkedList<Thread> producerList = new LinkedList<Thread>();
 	private LinkedList<Thread> consumerList = new LinkedList<Thread>();
 	private Buffer buffer;
-	private int maxAmount = 15;
+	private final int maxAmount = 15;
 	private GUI gui;
-	Logger logger;
 
 	public void start() {
 		gui = new GUI(this);
 		buffer = new Buffer();
 		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount, buffer));
-
-		logger = Logger.getInstance();
 
 		for (int i = 0; i < getRandom(1, maxAmount); i++) {
 			addProducer();
@@ -39,7 +35,7 @@ public class Controller {
 		timerUpdate();
 	}
 
-	private int getRandom(int maxValue, int minValue) {
+	private int getRandom(int minValue, int maxValue) {
 		return (int) (Math.random() * (maxValue - minValue + 1) + minValue);
 	}
 

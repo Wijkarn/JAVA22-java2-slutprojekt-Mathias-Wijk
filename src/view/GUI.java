@@ -40,8 +40,6 @@ public class GUI {
 		frame.setSize(800, 400);
 
 		controlPanel = new JPanel();
-		addButton = new JButton("Add Producer");
-		removeButton = new JButton("Remove Producer");
 
 		progressBarPanel = new JPanel();
 		progressBarPanel.setLayout(new BorderLayout());
@@ -90,8 +88,10 @@ public class GUI {
 		logger.logText(message);
 		System.out.println(message);
 	}
-	
+
 	private void createButtons() {
+		addButton = new JButton("Add Producer");
+		
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -99,6 +99,8 @@ public class GUI {
 				updateProgressBar();
 			}
 		});
+		
+		removeButton = new JButton("Remove Producer");
 
 		removeButton.addActionListener(new ActionListener() {
 			@Override
