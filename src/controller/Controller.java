@@ -7,44 +7,37 @@ import java.util.LinkedList;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import logger.Logger;
 import model.Buffer;
 import view.GUI;
 
 public class Controller {
-	LinkedList<Thread> producerList = new LinkedList<Thread>();
-	LinkedList<Thread> consumerList = new LinkedList<Thread>();
-	Buffer buffer = new Buffer();
-	int maxAmount = 15;
-	GUI gui = null;
+	private LinkedList<Thread> producerList = new LinkedList<Thread>();
+	private LinkedList<Thread> consumerList = new LinkedList<Thread>();
+	private Buffer buffer;
+	private int maxAmount = 15;
+	private GUI gui;
 	private Timer timer;
+	Logger logger;
 
 	public void start() {
+		gui = new GUI(this);
+		buffer = new Buffer();
+		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount, buffer));
+		
+		logger = Logger.getInstance();
 
-		for (int i = 0; i < getRandom(maxAmount, 1); i++) {
+		for (int i = 0; i < getRandom(1, maxAmount); i++) {
 			addProducer();
 		}
 
-		for (int i = 0; i < getRandom(maxAmount, 1); i++) {
-			Thread consumer = new Thread(new Consumer(buffer, getRandom(10, 1)));
+		for (int i = 0; i < getRandom(1, maxAmount); i++) {
+			Thread consumer = new Thread(new Consumer(buffer, getRandom(1, 10)));
 			consumer.start();
 			consumerList.add(consumer);
 		}
 
-		System.out.println("Amount of producers: " + producerList.size());
-		System.out.println("Amount of consumers: " + consumerList.size());
-
-		gui = new GUI(this);
-
-		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount, buffer));
-
-		int delay = 1000;
-		timer = new Timer(delay, (ActionListener) new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gui.updateProductIndicator();
-			}
-		});
-		timer.start();
+		timerUpdate();
 	}
 
 	private int getRandom(int maxValue, int minValue) {
@@ -52,12 +45,11 @@ public class Controller {
 	}
 
 	public void addProducer() {
-		if (producerList.size() < maxAmount) {
-			Thread producer = new Thread(new Producer(buffer, getRandom(10, 1)));
-			producer.start();
-			producerList.add(producer);
-			System.out.println("Added producers! Total: " + producerList.size());
-		}
+		int speed = getRandom(1, 10);
+		Thread producer = new Thread(new Producer(buffer, speed));
+		producer.start();
+		producerList.add(producer);
+		gui.logMessage("Added producers! Total: " + producerList.size() + ". Producer speed = " + speed);
 	}
 
 	public void removeProducer() {
@@ -65,6 +57,21 @@ public class Controller {
 			Thread producerThread = producerList.removeFirst();
 			producerThread.interrupt();
 		}
-		System.out.println("Removed producers! Total: " + producerList.size());
+		gui.logMessage("Removed producers! Total: " + producerList.size());
+	}
+
+	private void timerUpdate() {
+		int delay = 1000;
+		timer = new Timer(delay, (ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gui.updateProgressBar();
+			}
+		});
+		timer.start();
+	}
+
+	public int getProducerListSize() {
+		return producerList.size();
 	}
 }

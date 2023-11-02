@@ -4,7 +4,7 @@ import model.Buffer;
 import model.Item;
 
 public class Producer implements Runnable {
-	Buffer buffer = null;
+	Buffer buffer;
 	boolean isRunning = true;
 	int speed = 0;
 

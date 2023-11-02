@@ -10,7 +10,7 @@ public class Buffer {
 	public synchronized void add(Item item) {
 		buffer.add(item);
 		notify();
-		System.out.println(buffer);
+		//System.out.println(buffer);
 	}
 
 	public synchronized Item remove() {

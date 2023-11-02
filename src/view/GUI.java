@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 
 import controller.Controller;
+import logger.Logger;
 import model.Buffer;
 
 import java.awt.*;
@@ -17,20 +18,23 @@ public class GUI {
 	private JButton removeButton;
 	private JPanel progressBarPanel;
 	private JProgressBar progressBar;
-	private JTextArea logTextArea; // Add JTextArea for logging
-	private JScrollPane logScrollPane; // Add a scroll pane for the text area
-	private Buffer buffer = null;
+	private JTextArea logTextArea;
+	private JScrollPane logScrollPane;
+	private Buffer buffer;
 	private Controller controller;
+	Logger logger;
 
 	public GUI(Controller controller) {
 		this.controller = controller;
+		logger = Logger.getInstance();
+		createLogTextArea();
 	}
 
 	public void createAndShowGUI(int maxAmount, Buffer buffer) {
 		this.buffer = buffer;
 		frame = new JFrame("AvJavaSlutprojekt");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(800, 400); // Increased the height to accommodate the log area
+		frame.setSize(800, 400);
 
 		controlPanel = new JPanel();
 		addButton = new JButton("Add Producer");
@@ -42,16 +46,18 @@ public class GUI {
 		progressBar.setStringPainted(true);
 
 		// Create JTextArea for logging
-		logTextArea = new JTextArea(10, 1); // Set rows and columns
-		logTextArea.setEditable(false); // Make it read-only
-		logScrollPane = new JScrollPane(logTextArea);
+		if (logTextArea == null) {
+			createLogTextArea();
+		}
 
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.addProducer();
-				updateProductIndicator();
-				//logMessage("Producer added.");
+				updateProgressBar();
+
+				// logMessage("Added producer! Amount of producers: " +
+				// controller.getProducerListSize());
 			}
 		});
 
@@ -59,8 +65,9 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.removeProducer();
-				updateProductIndicator();
-				//logMessage("Producer removed.");
+				updateProgressBar();
+				// logMessage("Removed producer! Amount of producers: " +
+				// controller.getProducerListSize());
 			}
 		});
 
@@ -73,14 +80,20 @@ public class GUI {
 		frame.add(progressBarPanel, BorderLayout.CENTER);
 		frame.add(logScrollPane, BorderLayout.SOUTH);
 
-		updateProductIndicator();
+		updateProgressBar();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
-	public void updateProductIndicator() {
-		progressBar.setValue(buffer.getSize());
-		progressBar.setForeground(getColorForPercentage(buffer.getSize()));
+	public void updateProgressBar() {
+		int size = buffer.getSize();
+		progressBar.setValue(size);
+		progressBar.setForeground(getColorForPercentage(size));
+		if (size <= 10) {
+			logMessage("WARNING LOW PRODUCTS!");
+		} else if (size >= 90) {
+			logMessage("WARNING TO MANY PRODUCTS!");
+		}
 	}
 
 	private Color getColorForPercentage(double percentage) {
@@ -93,7 +106,15 @@ public class GUI {
 		}
 	}
 
-	private void logMessage(String message) {
-		logTextArea.setText("[" + new Date() + "] " + message + "\n");
+	public void logMessage(String message) {
+		logTextArea.append("[" + new Date() + "] " + message + "\n");
+		logger.logText(message);
+		System.out.println(message);
+	}
+
+	private void createLogTextArea() {
+		logTextArea = new JTextArea(10, 20);
+		logTextArea.setEditable(false);
+		logScrollPane = new JScrollPane(logTextArea);
 	}
 }

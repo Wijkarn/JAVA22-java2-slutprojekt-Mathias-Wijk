@@ -3,7 +3,7 @@ package controller;
 import model.Buffer;
 
 public class Consumer implements Runnable {
-	Buffer buffer = null;
+	Buffer buffer;
 	boolean isRunning = true;
 	int speed = 0;
 
@@ -18,7 +18,8 @@ public class Consumer implements Runnable {
 		while (isRunning) {
 			try {
 				Thread.sleep(speed * 1000);
-				System.out.println("Consumed: " + buffer.remove());
+				buffer.remove();
+				//System.out.println("Consumed: " + buffer.remove());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
