@@ -27,7 +27,7 @@ public class GUI {
 	public GUI(Controller controller) {
 		this.controller = controller;
 		logger = Logger.getInstance();
-		
+
 		logTextArea = new JTextArea(10, 20);
 		logTextArea.setEditable(false);
 		logScrollPane = new JScrollPane(logTextArea);
@@ -47,7 +47,7 @@ public class GUI {
 		progressBarPanel.setLayout(new BorderLayout());
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		
+
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

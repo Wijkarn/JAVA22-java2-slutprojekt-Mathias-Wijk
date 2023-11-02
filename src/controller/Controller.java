@@ -23,7 +23,7 @@ public class Controller {
 		gui = new GUI(this);
 		buffer = new Buffer();
 		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount, buffer));
-		
+
 		logger = Logger.getInstance();
 
 		for (int i = 0; i < getRandom(1, maxAmount); i++) {
@@ -68,7 +68,7 @@ public class Controller {
 			}
 		});
 		timer.start();
-		
+
 		int delay2 = 10000;
 		Timer timer2 = new Timer(delay2, (ActionListener) new ActionListener() {
 			@Override

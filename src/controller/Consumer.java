@@ -19,7 +19,7 @@ public class Consumer implements Runnable {
 			try {
 				Thread.sleep(speed * 1000);
 				buffer.remove();
-				//System.out.println("Consumed: " + buffer.remove());
+				// System.out.println("Consumed: " + buffer.remove());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
