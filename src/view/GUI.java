@@ -48,21 +48,7 @@ public class GUI {
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 
-		addButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.addProducer();
-				updateProgressBar();
-			}
-		});
-
-		removeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.removeProducer();
-				updateProgressBar();
-			}
-		});
+		createButtons();
 
 		controlPanel.add(addButton);
 		controlPanel.add(removeButton);
@@ -103,5 +89,23 @@ public class GUI {
 		logTextArea.append("[" + new Date() + "] " + message + "\n");
 		logger.logText(message);
 		System.out.println(message);
+	}
+	
+	private void createButtons() {
+		addButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.addProducer();
+				updateProgressBar();
+			}
+		});
+
+		removeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.removeProducer();
+				updateProgressBar();
+			}
+		});
 	}
 }
