@@ -22,10 +22,11 @@ public class GUI {
 	private JScrollPane logScrollPane;
 	private Buffer buffer;
 	private Controller controller;
-	Logger logger;
+	private Logger logger;
 
-	public GUI(Controller controller) {
+	public GUI(Controller controller, Buffer buffer) {
 		this.controller = controller;
+		this.buffer = buffer;
 		logger = Logger.getInstance();
 
 		logTextArea = new JTextArea(10, 20);
@@ -33,8 +34,7 @@ public class GUI {
 		logScrollPane = new JScrollPane(logTextArea);
 	}
 
-	public void createAndShowGUI(int maxAmount, Buffer buffer) {
-		this.buffer = buffer;
+	public void createAndShowGUI(int maxAmount) {
 		frame = new JFrame("AvJavaSlutprojekt");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(800, 400);
@@ -48,9 +48,6 @@ public class GUI {
 
 		createButtons();
 
-		controlPanel.add(addButton);
-		controlPanel.add(removeButton);
-
 		progressBarPanel.add(progressBar, BorderLayout.CENTER);
 
 		frame.add(controlPanel, BorderLayout.NORTH);
@@ -58,14 +55,17 @@ public class GUI {
 		frame.add(logScrollPane, BorderLayout.SOUTH);
 
 		updateProgressBar();
+
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
 	public void updateProgressBar() {
 		int size = buffer.getSize();
+
 		progressBar.setValue(size);
 		progressBar.setForeground(getColorForPercentage(size));
+
 		if (size <= 10) {
 			logMessage("WARNING LOW PRODUCTS!");
 		} else if (size >= 90) {
@@ -91,7 +91,8 @@ public class GUI {
 
 	private void createButtons() {
 		addButton = new JButton("Add Producer");
-		
+		removeButton = new JButton("Remove Producer");
+
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -99,8 +100,6 @@ public class GUI {
 				updateProgressBar();
 			}
 		});
-		
-		removeButton = new JButton("Remove Producer");
 
 		removeButton.addActionListener(new ActionListener() {
 			@Override
@@ -109,5 +108,8 @@ public class GUI {
 				updateProgressBar();
 			}
 		});
+
+		controlPanel.add(addButton);
+		controlPanel.add(removeButton);
 	}
 }

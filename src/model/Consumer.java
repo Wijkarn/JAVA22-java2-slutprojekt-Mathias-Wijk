@@ -1,9 +1,7 @@
-package controller;
-
-import model.Buffer;
+package model;
 
 public class Consumer implements Runnable {
-	Buffer buffer;
+	private Buffer buffer;
 	private boolean isRunning = true;
 	private int speed = 0;
 

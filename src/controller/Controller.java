@@ -3,11 +3,12 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import model.Buffer;
+import model.Consumer;
+import model.Producer;
 import view.GUI;
 
 public class Controller {
@@ -18,21 +19,25 @@ public class Controller {
 	private GUI gui;
 
 	public void start() {
-		gui = new GUI(this);
 		buffer = new Buffer();
-		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount, buffer));
+		gui = new GUI(this, buffer);
+		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount));
 
-		for (int i = 0; i < getRandom(1, maxAmount); i++) {
+		createAllThreads();
+
+		timerUpdate();
+	}
+
+	private void createAllThreads() {
+		for (int i = 0; i < getRandom(3, maxAmount) - 1; i++) {
 			addProducer();
 		}
 
-		for (int i = 0; i < getRandom(1, maxAmount); i++) {
+		for (int i = 0; i < getRandom(3, maxAmount) - 1; i++) {
 			Thread consumer = new Thread(new Consumer(buffer, getRandom(1, 10)));
 			consumer.start();
 			consumerList.add(consumer);
 		}
-
-		timerUpdate();
 	}
 
 	private int getRandom(int minValue, int maxValue) {

@@ -1,10 +1,7 @@
-package controller;
-
-import model.Buffer;
-import model.Item;
+package model;
 
 public class Producer implements Runnable {
-	Buffer buffer;
+	private Buffer buffer;
 	private boolean isRunning = true;
 	private int speed = 0;
 
@@ -22,8 +19,9 @@ public class Producer implements Runnable {
 		while (isRunning) {
 			try {
 				Thread.sleep(speed * 1000);
-
-				buffer.add(new Item("" + (int) (Math.random() * 10)));
+				if (buffer.getSize() < 100) {
+					buffer.add(new Item("" + (int) (Math.random() * 10)));
+				}
 			} catch (InterruptedException e) {
 				stopProducing();
 				Thread.currentThread().interrupt();

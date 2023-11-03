@@ -16,7 +16,7 @@ public class Logger {
 		createLogDirectory();
 
 		try {
-			// Create a log file with a timestamp in the filename
+			// Create a log file with a timestamp in the filename in a folder
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 			String logFileName = logDirectory + File.separator + "log_" + dateFormat.format(new Date()) + ".txt";
 			writer = new PrintWriter(new FileWriter(logFileName), true);
