@@ -23,25 +23,29 @@ public class Controller {
 		gui = new GUI(this, buffer);
 		SwingUtilities.invokeLater(() -> gui.createAndShowGUI(maxAmount));
 
-		createAllThreads();
+		createConsumersAndProducers();
 
 		timerUpdate();
 	}
 
-	private void createAllThreads() {
-		for (int i = 0; i < getRandom(3, maxAmount) - 1; i++) {
+	private void createConsumersAndProducers() {
+		for (int i = 0; i < getRandom(3, maxAmount - 1); i++) {
 			addProducer();
 		}
 
-		for (int i = 0; i < getRandom(3, maxAmount) - 1; i++) {
-			Thread consumer = new Thread(new Consumer(buffer, getRandom(1, 10)));
-			consumer.start();
-			consumerList.add(consumer);
+		for (int i = 0; i < getRandom(3, maxAmount - 1); i++) {
+			addConsumer();
 		}
 	}
 
 	private int getRandom(int minValue, int maxValue) {
 		return (int) (Math.random() * (maxValue - minValue + 1) + minValue);
+	}
+
+	private void addConsumer() {
+		Thread consumer = new Thread(new Consumer(buffer, getRandom(1, 10)));
+		consumer.start();
+		consumerList.add(consumer);
 	}
 
 	public void addProducer() {
@@ -56,13 +60,15 @@ public class Controller {
 		if (!producerList.isEmpty()) {
 			Thread producerThread = producerList.removeFirst();
 			producerThread.interrupt();
+			gui.logMessage("Removed producers! Total: " + producerList.size());
+		} else {
+			gui.logMessage("No producers to remove!");
 		}
-		gui.logMessage("Removed producers! Total: " + producerList.size());
 	}
 
 	private void timerUpdate() {
-		int delay = 1000;
-		Timer timer = new Timer(delay, (ActionListener) new ActionListener() {
+		// Update the progressbar every second
+		Timer timer = new Timer(1000, (ActionListener) new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gui.updateProgressBar();
@@ -70,8 +76,8 @@ public class Controller {
 		});
 		timer.start();
 
-		int delay2 = 10000;
-		Timer timer2 = new Timer(delay2, (ActionListener) new ActionListener() {
+		// Log amount of items every 10 seconds
+		Timer timer2 = new Timer(10000, (ActionListener) new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gui.logMessage("Amount of products: " + buffer.getSize());

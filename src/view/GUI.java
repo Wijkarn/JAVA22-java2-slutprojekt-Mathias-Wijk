@@ -16,7 +16,6 @@ public class GUI {
 	private JPanel controlPanel;
 	private JButton addButton;
 	private JButton removeButton;
-	private JPanel progressBarPanel;
 	private JProgressBar progressBar;
 	private JTextArea logTextArea;
 	private JScrollPane logScrollPane;
@@ -41,17 +40,13 @@ public class GUI {
 
 		controlPanel = new JPanel();
 
-		progressBarPanel = new JPanel();
-		progressBarPanel.setLayout(new BorderLayout());
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 
 		createButtons();
 
-		progressBarPanel.add(progressBar, BorderLayout.CENTER);
-
 		frame.add(controlPanel, BorderLayout.NORTH);
-		frame.add(progressBarPanel, BorderLayout.CENTER);
+		frame.add(progressBar, BorderLayout.CENTER);
 		frame.add(logScrollPane, BorderLayout.SOUTH);
 
 		updateProgressBar();
@@ -83,6 +78,7 @@ public class GUI {
 		}
 	}
 
+	// Logs message in GUI, text file and consoles
 	public void logMessage(String message) {
 		logTextArea.append("[" + new Date() + "] " + message + "\n");
 		logger.logText(message);
